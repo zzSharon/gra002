@@ -15,7 +15,7 @@
 from typing import Any
 
 import numpy as np
-
+import pandas as pd
 import streamlit as st
 from streamlit.hello.utils import show_code
 
@@ -79,6 +79,82 @@ It displays an animated fractal based on the the Julia Set. Use the slider
 to tune different parameters."""
 )
 
-animation_demo()
+
+test_df = pd.read_csv('/workspaces/gra002/test.csv')
+diff_counts = test_df['Diff'].value_counts()
+
+# 创建一个包含diff_counts的DataFrame，使其成为一行多列
+diff_counts_df = pd.DataFrame([diff_counts])
+
+# 由于diff_counts已经作为Series返回了DIFF类别作为索引，这里直接转换成DataFrame时会保持索引
+# 转置DataFrame，使其成为一行多列
+diff_counts_df = diff_counts_df.T.reset_index()  # 重置索引来将原来的索引（DIFF类别）变成一列
+diff_counts_df.columns = ['DIFF', 'Counts']      # 重命名列名
+
+# 如果你想要一个一行七列的DataFrame（不包括DIFF类别作为数据列），那么可以这样操作
+one_row_df = pd.DataFrame([diff_counts.values], columns=diff_counts.index)
+chart_data = pd.DataFrame(one_row_df)
+# st.bar_chart(chart_data)
+# plt.bar(x=test_df.Diff,height=diff_counts)
+# 提供的DataFrame数据
+data = {'Diff': [6, 8, 7, 1, 3, 4, 2], '0': [1940, 264, 131, 48, 29, 22, 10]}
+one_row_df = pd.DataFrame(data)
+
+# 设置Diff为x轴的标签
+x_labels = one_row_df['Diff'].tolist()
+
+# 设置数值为y轴的值
+y_values = one_row_df['0'].tolist()
+
+import matplotlib.pyplot as plt
+# 创建条形图
+
+fig=plt.figure()
+plt.bar(x_labels, y_values, color='orangered')
+
+# 设置x轴的标题
+plt.xlabel('DIFF')
+
+# 设置y轴的标题
+plt.ylabel('Values')
+
+# 添加图表的标题
+plt.title('Bar Chart of DIFF Values')
+
+# 展示图表
+st.pyplot(fig)
+
+
+# 提取'type'列作为x轴的标签
+type = test_df['Type'].value_counts()
+# 提取与'type'相关的值作为y轴的值
+# 这假设DataFrame有一个与每个'type'相关的数值列，此处命名为'value'
+# 假设这是你的DataFrame
+data = {'Type': [0, 11, 22, 33], 'Count': [1842, 543, 49, 10]}
+test_df = pd.DataFrame(data)
+
+fig=plt.figure()
+# 设置Type为x轴的标签
+x_labels = test_df['Type'].tolist()
+
+# 设置Count为y轴的值
+y_values = test_df['Count'].tolist()
+
+# 创建条形图
+plt.bar(x_labels, y_values,color='orange')
+
+# 设置x轴的标题
+plt.xlabel('Type')
+
+# 设置y轴的标题
+plt.ylabel('Count')
+
+# 添加图表的标题
+plt.title('Bar Chart of Counts by Type')
+st.pyplot(fig)
+
+test_df = pd.read_csv('/workspaces/gra002/test.csv')
+# a=test_df['Questions']['Answer'].value_counts()
+# print(test_df.iloc[3])
 
 show_code(animation_demo)

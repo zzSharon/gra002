@@ -1,17 +1,7 @@
-# Copyright (c) Streamlit Inc. (2018-2022) Snowflake Inc. (2022)
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
 
+import pandas as pd
+import numpy as np
+import random
 import streamlit as st
 from streamlit.logger import get_logger
 
@@ -24,28 +14,41 @@ def run():
         page_icon="👋",
     )
 
-    st.write("# Welcome to Streamlit! 👋")
+    st.write("# Welcome here! 👋")
 
     st.sidebar.success("Select a demo above.")
 
+    test_df = pd.read_csv('/workspaces/gra002/test.csv')
+    # 获取DataFrame的行数
+    num_rows = len(test_df)
+
+    if st.button('给我一个问题'):
+        st.session_state.index = random.randint(0, num_rows - 1)
+    st.write(test_df.iloc[st.session_state.index])
+
+    genre = st.radio(
+        "你的答案是：",
+        ["A ::smiling_face_with_3_hearts:", "B ::thermometer:", "C :blush:","D ::sun_with_face:"],
+        # captions = ["Laugh out loud.", "Get the popcorn.", "Never stop learning."]
+        index=None,)
+
+    if genre == 'A ::smiling_face_with_3_hearts:':
+        st.balloons()
+        st.write('You selected right!')
+    else:
+        st.write("You  select wrong!.")       
+
     st.markdown(
         """
-        Streamlit is an open-source app framework built specifically for
-        Machine Learning and Data Science projects.
-        **👈 Select a demo from the sidebar** to see some examples
-        of what Streamlit can do!
-        ### Want to learn more?
-        - Check out [streamlit.io](https://streamlit.io)
-        - Jump into our [documentation](https://docs.streamlit.io)
-        - Ask a question in our [community
-          forums](https://discuss.streamlit.io)
-        ### See more complex demos
-        - Use a neural net to [analyze the Udacity Self-driving Car Image
-          Dataset](https://github.com/streamlit/demo-self-driving)
-        - Explore a [New York City rideshare dataset](https://github.com/streamlit/demo-uber-nyc-pickups)
+        本项目的数据来自小学/中高考语文阅读理解题库。相较于英文，中文阅读理解有着更多的歧义性和多义性，然而璀璨的中华文明得以绵延数千年，离不开每一个时代里努力钻研、坚守传承的人，这也正是本项目的魅力与挑战，让机器读懂文字，让机器学习文明。
+
+        **☝ 随机生成一道题目来测试一下吧** 
+
     """
     )
 
 
 if __name__ == "__main__":
+    if "index" not in st.session_state:
+        st.session_state.index = 0
     run()
