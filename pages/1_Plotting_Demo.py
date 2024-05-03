@@ -54,3 +54,27 @@ Streamlit. We're generating a bunch of random numbers in a loop for around
 plotting_demo()
 
 show_code(plotting_demo)
+
+
+
+
+
+
+
+
+from transformers import BertTokenizer, BertModel, BertConfig
+from transformers import AutoTokenizer, AutoConfig, AutoModel
+from transformers import BertForMaskedLM
+from transformers import AdamW
+from transformers import optimization
+from transformers import get_cosine_schedule_with_warmup
+from transformers import BertForMultipleChoice
+# 假设你知道你想要加载模型的确切类型和名称
+model_name = 'hfl/chinese-macbert-large'
+
+# 首先从预训练模型名加载配置
+config = BertConfig.from_pretrained(model_name)
+
+# 通过配置实例化模型
+model = BertModel(config)
+
