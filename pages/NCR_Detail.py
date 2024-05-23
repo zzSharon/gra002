@@ -20,7 +20,7 @@ import streamlit as st
 from streamlit.hello.utils import show_code
 
 
-def animation_demo() -> None:
+def NCR_Detail() -> None:
 
     # Interactive Streamlit elements, like these sliders, return their value.
     # This gives you an extremely simple interaction model.
@@ -70,15 +70,16 @@ def animation_demo() -> None:
     st.button("Re-run")
 
 
-st.set_page_config(page_title="Animation Demo", page_icon="📹")
-st.markdown("# Animation Demo")
-st.sidebar.header("Animation Demo")
+st.set_page_config(page_title="NCR_Detail😃", page_icon="📹")
+st.markdown("# NCR_Detail😃")
+st.sidebar.header("NCR_Detail")
+st.sidebar.header("这里展示了NCR数据集的难度分布与文体分布，同时还可以为系统添加数据。题目具有相当的难度，且文体包含文言文、诗歌等多种文体。")
 st.write(
-    """This app shows how you can use Streamlit to build cool animations.
-It displays an animated fractal based on the the Julia Set. Use the slider
-to tune different parameters."""
+    """这里展示了NCR数据集的更多信息:."""
 )
-
+st.markdown(
+" ***👇 下面是数据集的难度统计***."
+)
 
 test_df = pd.read_csv('/workspaces/gra002/test.csv')
 diff_counts = test_df['Diff'].value_counts()
@@ -125,6 +126,10 @@ plt.title('Bar Chart of DIFF Values')
 st.pyplot(fig)
 
 
+st.markdown(
+" ***👇 下面是数据集的类别统计***."
+)
+
 # 提取'type'列作为x轴的标签
 type = test_df['Type'].value_counts()
 # 提取与'type'相关的值作为y轴的值
@@ -157,4 +162,97 @@ test_df = pd.read_csv('/workspaces/gra002/test.csv')
 # a=test_df['Questions']['Answer'].value_counts()
 # print(test_df.iloc[3])
 
-show_code(animation_demo)
+# show_code(animation_demo)
+
+def set_bg_hack_url():
+    '''
+    A function to unpack an image from url and set as bg.
+    Returns
+    -------
+    The background.
+    '''
+        
+    st.markdown(
+         f"""
+         <style>
+         .stApp {{
+             background: url("https://i.postimg.cc/kXKdK0K9/tomer-texler-MIGq1g0ws7k-unsplash.jpg");
+             background-size: cover
+         }}
+         </style>
+         """,
+         unsafe_allow_html=True
+     )
+st.write(test_df.iloc[0])
+import streamlit as st
+import csv
+
+# 指定CSV文件路径
+csv_file_path = '/workspaces/gra002/test.csv'
+
+# 创建Streamlit表单
+with st.form("my_form"):
+    st.write("在这里添加数据:")
+    
+    # 创建输入框让用户输入每个字段的值
+    question = st.text_input("问题")
+    choices = st.text_input("选项")
+    q_id = st.text_input("题目id")
+    content = st.text_input("文章")
+    type_ = st.text_input("文体")
+    diff = st.text_input("难度")
+    
+    # 每当用户完成表单并点击"Submit"按钮时，就会提交表单
+    submitted = st.form_submit_button("提交")
+    if submitted:
+        # 数据行
+        new_row = {
+            'Question': question,
+            'Choices': choices,
+            'Q_id': q_id,
+            'Content': content,
+            'Type': type_,
+            'Diff': diff
+        }
+        
+        # 打开CSV文件准备写入
+        with open(csv_file_path, mode='a', newline='', encoding='utf-8') as file:
+            # 创建一个DictWriter对象
+            writer = csv.DictWriter(file, fieldnames=['Question', 'Choices', 'Q_id', 'Content', 'Type', 'Diff'])
+            
+            # 写入新的数据行
+            writer.writerow(new_row)
+        
+        # 显示操作成功的消息
+        st.success("数据添加成功!")
+import csv
+
+# 指定CSV文件路径
+csv_file_path = 'test.csv'
+
+# 打开CSV文件准备读取
+with open(csv_file_path, mode='r', newline='') as file:
+    # 创建一个csv.reader对象
+    reader = csv.reader(file)
+    
+    # 初始化last_row变量
+    last_row = None
+    
+    # 逐行读取文件内容直到最后一行
+    for row in reader:
+        last_row = row
+
+# # # 打印最后一行数据
+# st.write(last_row)
+# test_df = pd.read_csv('/workspaces/gra002/test.csv')
+# st.write(len(test_df))
+# unique_types = test_df['Diff'].unique()
+
+# # 使用 st.selectbox 创建一个下拉选择框
+# selected_value = st.selectbox("请从以下数值中选择一个：", unique_types)
+# print(unique_types)
+# test_df = test_df[test_df['Diff'] == selected_value]
+# st.write(test_df)
+
+set_bg_hack_url()
+
